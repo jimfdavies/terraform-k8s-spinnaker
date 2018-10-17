@@ -25,4 +25,7 @@ kubectl create serviceaccount --namespace kube-system tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 helm install -n spin1 stable/spinnaker -f values.yaml --timeout 300 --namespace spinnaker
+
+export DECK_POD=$(kubectl get pods --namespace spinnaker -l "cluster=spin-deck" -o jsonpath="{.items[0].metadata.name} > ")
+kubectl port-forward --namespace spinnaker $DECK_POD 9000
 ```
